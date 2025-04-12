@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PulseVR - VR Channel</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="https://www.youtube.com/@pulsevr1" target="_blank">YouTube</a>
+      <a href="https://discord.gg/RCc7TqFjZg" target="_blank">Discord</a>
+      <a href="fiverr.html">Fiverr</a>
+      <a href="merch.html">Get Merch</a>
+    </nav>
+    <img src="channels4_profile.jpg" alt="@pulsevr1 Logo" class="logo" />
+    <h1>PulseVR</h1>
+    <p>VR Content. Real Reactions. Full Immersion.</p>
+  </header>
+
+  <section class="videos">
+    <h2>Latest Videos</h2>
+    <div id="latest-video">Loading...</div>
+  </section>
+
+  <footer>
+    <div class="footer-icons">
+      <a href="https://youtube.com/@pulsevr1" target="_blank" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://discord.gg/RCc7TqFjZg" target="_blank" aria-label="Discord">
+        <i class="fab fa-discord"></i>
+      </a>
+    </div>
+    <p>&copy;2023 @pulsevr1</p>
+  </footer>
+
+  <script>
+    const API_KEY = 'AIzaSyBQSU9-3h4yKScVCLAkzSyqUxNSxRG4P24';
+    const CHANNEL_ID = 'UC4GtNmIvCUGIFV2xwOd_zzg';
+    const API_URL = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&order=date&part=snippet&type=video&maxResults=5`;
+
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        const video = data.items.find(item => item.id.kind === "youtube#video");
+
+        if (!video) {
+          document.getElementById('latest-video').innerText = "No recent video found.";
+          return;
+        }
+
+        const videoId = video.id.videoId;
+        const title = video.snippet.title;
+
+        const embedHTML = `
+          <div class="video-wrapper">
+            <iframe 
+              src="https://www.youtube.com/embed/${videoId}" 
+              title="${title}"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>`;
+
+        document.getElementById('latest-video').innerHTML = embedHTML;
+      })
+      .catch(error => {
+        console.error("Error fetching video:", error);
+        document.getElementById('latest-video').innerText = "Couldn't load latest video.";
+      });
+  </script>
+</body>
+</html>
+
